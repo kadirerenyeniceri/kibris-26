@@ -16,3 +16,4 @@ main{max-width:980px;padding:0 30px}.countdown-top{padding:48px 0 24px;text-alig
 }
 @media(max-width:380px){.toy-slot{width:140px}.toy-reel{font-size:22px}}
 @media(prefers-reduced-motion:reduce){.toy-slot{transition:none}}
+.runner > img{scale:-1 1}
