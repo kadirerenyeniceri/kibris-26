@@ -16,4 +16,12 @@ main{max-width:980px;padding:0 30px}.countdown-top{padding:48px 0 24px;text-alig
 }
 @media(max-width:380px){.toy-slot{width:140px}.toy-reel{font-size:22px}}
 @media(prefers-reduced-motion:reduce){.toy-slot{transition:none}}
-.runner > img{scale:-1 1}
+.runner > img{scale:1 1}
+.track-scene{height:300px}
+.destination img{width:215px;height:285px}
+@keyframes run-across{from{left:0}to{left:calc(100% - 325px)}}
+@media(max-width:560px){
+  .track-scene{height:260px}
+  .destination img{width:165px;height:245px}
+  @keyframes run-across{from{left:0}to{left:max(0px,calc(100% - 235px))}}
+}
