@@ -25,3 +25,10 @@ main{max-width:980px;padding:0 30px}.countdown-top{padding:48px 0 24px;text-alig
   .destination img{width:165px;height:245px}
   @keyframes run-across{from{left:0}to{left:max(0px,calc(100% - 235px))}}
 }
+
+/* A second runner stays above the original, including on narrow screens. */
+.money-runner{bottom:125px;animation-delay:-5.5s;pointer-events:none}
+.money-runner>img{animation-delay:-.12s}
+.pocket-bill{position:absolute;width:25px;height:auto;z-index:3;pointer-events:none;will-change:transform,opacity}
+@media(max-width:560px){.money-runner{bottom:120px}.pocket-bill{width:20px}}
+@media(prefers-reduced-motion:reduce){.money-runner>img{animation:none}.pocket-bill{display:none}}

@@ -50,3 +50,42 @@ function burstMoney(source = joinButton) {
   }
 }
 joinButton.addEventListener('click', () => burstMoney());
+
+// Keep the pocket effect separate from the existing participation/slot effects.
+(() => {
+  const runner = document.getElementById('money-runner');
+  const scene = runner.closest('.track-scene');
+  const motion = window.matchMedia('(prefers-reduced-motion: reduce)');
+  const sprite = runner.querySelector('img');
+  function dropPocketMoney() {
+    if (document.hidden || motion.matches || !sprite.complete || !sprite.naturalWidth) return;
+    const bounds = scene.getBoundingClientRect();
+    if (bounds.bottom < 0 || bounds.top > innerHeight) return;
+    const body = sprite.getBoundingClientRect();
+    const bill = document.createElement('img');
+    bill.src = 'bill.png';
+    bill.alt = '';
+    bill.setAttribute('aria-hidden', 'true');
+    bill.className = 'pocket-bill';
+    const x = body.left - bounds.left + body.width * .36;
+    const y = body.top - bounds.top + body.height * .66;
+    bill.style.left = x + 'px';
+    bill.style.top = y + 'px';
+    scene.appendChild(bill);
+    const fall = Math.max(20, bounds.height - y - 24);
+    const drift = Math.min(x, 25 + Math.random() * 30);
+    const spin = 100 + Math.random() * 150;
+    const animation = bill.animate([
+      { transform: 'translate(0,0) rotate(-15deg) scale(.45)', opacity: 0 },
+      { transform: `translate(${-drift*.2}px,${fall*.1}px) rotate(25deg) scale(.8)`, opacity: 1, offset: .2 },
+      { transform: `translate(${-drift*.65}px,${fall*.5}px) rotate(${spin*.6}deg) scale(1)`, opacity: 1, offset: .65 },
+      { transform: `translate(${-drift}px,${fall}px) rotate(${spin}deg) scale(.9)`, opacity: 0 }
+    ], { duration: 1550, easing: 'linear', fill: 'both' });
+    animation.onfinish = () => bill.remove();
+    animation.oncancel = () => bill.remove();
+  }
+  setInterval(dropPocketMoney, 380);
+  motion.addEventListener('change', () => {
+    if (motion.matches) scene.querySelectorAll('.pocket-bill').forEach(bill => bill.remove());
+  });
+})();
