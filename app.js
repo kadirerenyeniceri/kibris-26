@@ -51,42 +51,39 @@ function burstMoney(source = joinButton) {
 }
 joinButton.addEventListener('click', () => burstMoney());
 
-// Keep the pocket effect separate from the existing participation/slot effects.
+// Bills travel inside the moving pair, so both pockets stay aligned on bends.
 (() => {
   const runner = document.getElementById('money-runner');
-  const scene = runner.closest('.track-scene');
+  const pair = runner.querySelector('.couple-sprite');
+  const sprite = pair.querySelector('img');
   const motion = window.matchMedia('(prefers-reduced-motion: reduce)');
-  const sprite = runner.querySelector('img');
-  function dropPocketMoney() {
+  function transferPocketMoney() {
     if (document.hidden || motion.matches || !sprite.complete || !sprite.naturalWidth) return;
-    const bounds = scene.getBoundingClientRect();
+    const bounds = runner.getBoundingClientRect();
     if (bounds.bottom < 0 || bounds.top > innerHeight) return;
-    const body = sprite.getBoundingClientRect();
+    const width = pair.clientWidth;
+    const height = pair.clientHeight;
     const bill = document.createElement('img');
     bill.src = 'bill.png';
     bill.alt = '';
     bill.setAttribute('aria-hidden', 'true');
-    bill.className = 'pocket-bill';
-    const x = body.left - bounds.left + body.width * .36;
-    const y = body.top - bounds.top + body.height * .66;
-    bill.style.left = x + 'px';
-    bill.style.top = y + 'px';
-    scene.appendChild(bill);
-    const fall = Math.min(105, Math.max(20, bounds.height - y - 24));
-    const drift = Math.min(x, 25 + Math.random() * 30);
-    const spin = 100 + Math.random() * 150;
+    bill.className = 'pocket-bill couple-bill';
+    pair.appendChild(bill);
+    const travelX = width * .46;
+    const travelY = height * .025;
     const animation = bill.animate([
-      { transform: 'translate(0,0) rotate(-15deg) scale(.45)', opacity: 0 },
-      { transform: `translate(${-drift*.2}px,${fall*.1}px) rotate(25deg) scale(.8)`, opacity: 1, offset: .2 },
-      { transform: `translate(${-drift*.65}px,${fall*.5}px) rotate(${spin*.6}deg) scale(1)`, opacity: 1, offset: .65 },
-      { transform: `translate(${-drift}px,${fall}px) rotate(${spin}deg) scale(.9)`, opacity: 0 }
-    ], { duration: 1550, easing: 'linear', fill: 'both' });
+      { transform: 'translate(-50%,-50%) scale(0) rotate(-12deg)', opacity: 0 },
+      { transform: `translate(calc(-50% + ${travelX*.15}px),calc(-50% - ${height*.045}px)) scale(.85) rotate(-12deg)`, opacity: 1, offset: .18 },
+      { transform: `translate(calc(-50% + ${travelX*.55}px),calc(-50% - ${height*.065}px)) scale(1) rotate(8deg)`, opacity: 1, offset: .5 },
+      { transform: `translate(calc(-50% + ${travelX*.9}px),calc(-50% + ${travelY}px)) scale(.65) rotate(-6deg)`, opacity: 1, offset: .84 },
+      { transform: `translate(calc(-50% + ${travelX}px),calc(-50% + ${travelY}px)) scale(0)`, opacity: 0 }
+    ], { duration: 1400, easing: 'linear', fill: 'both' });
     animation.onfinish = () => bill.remove();
     animation.oncancel = () => bill.remove();
   }
-  setInterval(dropPocketMoney, 380);
+  setInterval(transferPocketMoney, 560);
   motion.addEventListener('change', () => {
-    if (motion.matches) scene.querySelectorAll('.pocket-bill').forEach(bill => bill.remove());
+    if (motion.matches) pair.querySelectorAll('.couple-bill').forEach(bill => bill.remove());
   });
 })();
 
@@ -97,7 +94,7 @@ joinButton.addEventListener('click', () => burstMoney());
   const paths = road.querySelectorAll('path');
   const runners = [...scene.querySelectorAll('.runner')];
   const stops = road.querySelector('.road-stops');
-  scene.style.setProperty('--runner-count', runners.length);
+  scene.style.setProperty('--runner-count', runners.reduce((total, runner) => total + Number(runner.dataset.characters || 1), 0));
   runners.forEach((runner, index) => {
     const progress = (index / runners.length + .08) % 1;
     runner.style.setProperty('--route-delay', `${-progress * 36}s`);
@@ -107,7 +104,7 @@ joinButton.addEventListener('click', () => burstMoney());
     const width = scene.clientWidth;
     const height = scene.clientHeight;
     const slot = scene.querySelector('.destination');
-    const startX = runners[0].offsetWidth / 2 + 10;
+    const startX = Math.max(...runners.map(runner => runner.offsetWidth)) / 2 + 10;
     const startY = height - 32;
     const endX = width - slot.offsetWidth * .53;
     const endY = slot.offsetTop + slot.offsetHeight * .76;

@@ -47,3 +47,11 @@ main{max-width:980px;padding:0 30px}.countdown-top{padding:48px 0 24px;text-alig
 @keyframes run-map{0%{offset-distance:0%;opacity:0}3%{opacity:1}94%{opacity:1}100%{offset-distance:100%;opacity:0}}
 @media(max-width:560px){.track-scene{height:max(660px,calc(var(--runner-count,2)*160px + 200px));margin-top:12px}.road-edge{stroke-width:32}.road-surface{stroke-width:26}.road-stops circle{r:6px;stroke-width:2}}
 @media(prefers-reduced-motion:reduce){.track-scene .runner{animation:none;offset-distance:var(--rest-position,10%);opacity:1}.road-progress{transition:none}}
+
+/* The joined hands, both pockets and banknotes move as one group. */
+.track-scene .couple-runner{width:210px;height:210px}
+.couple-sprite{position:relative;width:100%;height:100%;animation:bob .24s ease-in-out infinite alternate}
+.couple-sprite>img:not(.couple-bill){display:block;width:100%;height:100%;object-fit:contain}
+.couple-sprite>.couple-bill{left:20%;top:61%;width:23px;height:auto}
+@media(max-width:560px){.track-scene .couple-runner{width:160px;height:160px}.couple-sprite>.couple-bill{width:19px}}
+@media(prefers-reduced-motion:reduce){.couple-sprite{animation:none}}
