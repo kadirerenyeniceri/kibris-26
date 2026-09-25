@@ -107,7 +107,7 @@ joinButton.addEventListener('click', () => burstMoney());
     const startX = Math.max(...runners.map(runner => runner.offsetWidth)) / 2 + 10;
     const startY = height - 32;
     const endX = width - slot.offsetWidth * .53;
-    const endY = slot.offsetTop + slot.offsetHeight * .76;
+    const endY = slot.offsetTop + slot.offsetHeight * .95;
     const dx = endX - startX;
     const dy = startY - endY;
     const x = n => startX + dx * n;

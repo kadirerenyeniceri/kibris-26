@@ -69,3 +69,34 @@ main{max-width:980px;padding:0 30px}.countdown-top{padding:48px 0 24px;text-alig
 #service-drink{font-size:25px;opacity:0}.service-kiss{width:30px;height:30px;font-size:30px;display:grid;place-items:center;transform-origin:center}
 @media(max-width:560px){.track-scene{height:max(1040px,calc((var(--runner-count,4) + 1)*185px + 115px))}.track-scene .red-runner{width:94px;height:141px}#service-waitress{width:86px;height:129px}#service-drink{font-size:22px}}
 @media(prefers-reduced-motion:reduce){.track-scene .runner{animation:none}.service-facing img{animation:none}}
+
+/* Quiet casino carpet, keeping the route and characters in the foreground. */
+.journey{background-color:#65232b;background-image:linear-gradient(#35192166,#35192166),url('casino-carpet-red.png');background-repeat:repeat;background-size:auto,560px;color:#f3f3ec;border:1px solid #ffffff18}
+.journey-road .road-edge{stroke:#07091090;stroke-width:40}
+.journey-road .road-surface{stroke:#d7c8a9}
+.journey-road .road-dashes{stroke:#65554455}
+.journey-road .road-progress{stroke:#8b7144}
+.road-stops circle{fill:#e7dac0;stroke:#8b7144}
+.track-scene .destination-pair{width:260px;height:260px;container-type:inline-size}
+.destination-pair>img{width:100%;height:100%;filter:drop-shadow(0 8px 9px #0007)}
+.jackpot{position:absolute;left:20%;width:60%;height:6.5%;display:flex;flex-direction:column;justify-content:center;align-items:center;line-height:1;pointer-events:none;color:#fff5c7;text-shadow:0 1px 2px #000,0 0 6px #ffd47480}
+.jackpot.grand{top:5.9%}.jackpot.major{top:14.2%}
+.jackpot span{font-weight:900;font-size:1.7cqw;letter-spacing:.3cqw}
+.jackpot strong{font-size:3.6cqw;font-weight:900;letter-spacing:.06em;font-variant-numeric:tabular-nums;margin-top:.3cqw}
+@media(max-width:560px){.track-scene .destination-pair{width:200px;height:200px}.journey{background-size:auto,360px}}
+/* Keep both jackpot labels readable at the journey's compact size. */
+.destination-pair .jackpot{flex-direction:row;gap:4px}
+.destination-pair .jackpot span{font-size:clamp(6px,3cqw,9px);letter-spacing:0}
+.destination-pair .jackpot strong{font-size:clamp(9px,4.2cqw,13px);letter-spacing:0;margin-top:0}
+/* Cigarette service follows the white-shirted man's mouth. */
+#smoking-waitress{position:absolute;top:0;left:0;width:105px;height:158px;will-change:transform}
+#smoking-waitress.serving .service-facing img{animation:none}
+.cigarette-tray{position:absolute;left:0;top:0;width:44px;height:7px;border-radius:50%;background:linear-gradient(#e5e2d6,#717777);border-bottom:2px solid #41484a;box-shadow:0 2px 3px #0006}
+.served-cigarette{position:absolute;left:0;top:0;height:5px;display:flex;align-items:center;filter:drop-shadow(0 1px 1px #0008)}
+.served-cigarette[hidden],.cigarette-tray[hidden]{display:none}
+.cigarette-filter{display:block;width:6px;height:5px;background:linear-gradient(#d7aa66,#b98040);border-radius:1px 0 0 1px}
+.cigarette-paper{display:block;position:relative;height:5px;background:linear-gradient(#fffceb,#d6d4bd);border-radius:0 1px 1px 0}
+.cigarette-paper b{position:absolute;right:0;top:0;width:2px;height:5px;background:#938e80}
+.lit .cigarette-paper b{background:#e97832;box-shadow:1px 0 3px #ff8b3e}
+.cigarette-smoke{position:absolute;left:0;top:0;width:12px;height:18px;border-left:3px solid #e6e4db;border-radius:50%;filter:blur(1.3px);pointer-events:none}
+@media(max-width:560px){#smoking-waitress{width:86px;height:129px}}
