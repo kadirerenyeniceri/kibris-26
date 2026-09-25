@@ -97,7 +97,7 @@ joinButton.addEventListener('click', () => burstMoney());
   scene.style.setProperty('--runner-count', runners.reduce((total, runner) => total + Number(runner.dataset.characters || 1), 0));
   runners.forEach((runner, index) => {
     const progress = (index / runners.length + .08) % 1;
-    runner.style.setProperty('--route-delay', `${-progress * 36}s`);
+    runner.style.setProperty('--route-delay', `${-progress * 48}s`);
     runner.style.setProperty('--rest-position', `${progress * 100}%`);
   });
   function layoutRoad() {
@@ -113,20 +113,22 @@ joinButton.addEventListener('click', () => burstMoney());
     const x = n => startX + dx * n;
     const y = n => startY - dy * n;
     const route = `M ${startX} ${startY}
-      C ${x(.28)} ${y(0)}, ${x(.38)} ${y(.02)}, ${x(.38)} ${y(.27)}
-      C ${x(.38)} ${y(.52)}, ${x(.57)} ${y(.43)}, ${x(.64)} ${y(.57)}
-      C ${x(.77)} ${y(.82)}, ${x(.67)} ${y(1)}, ${endX} ${endY}`;
+      C ${x(.22)} ${y(0)}, ${x(.24)} ${y(.04)}, ${x(.24)} ${y(.20)}
+      C ${x(.24)} ${y(.37)}, ${x(.49)} ${y(.26)}, ${x(.50)} ${y(.40)}
+      C ${x(.52)} ${y(.54)}, ${x(.51)} ${y(.60)}, ${x(.65)} ${y(.62)}
+      C ${x(.83)} ${y(.64)}, ${x(.82)} ${y(.72)}, ${x(.82)} ${y(.83)}
+      C ${x(.82)} ${y(.98)}, ${x(.90)} ${y(1)}, ${endX} ${endY}`;
     road.setAttribute('viewBox', `0 0 ${width} ${height}`);
     paths.forEach(path => path.setAttribute('d', route));
     runners.forEach(runner => runner.style.offsetPath = `path("${route.replace(/\s+/g, ' ')}")`);
     const length = paths[0].getTotalLength();
     stops.replaceChildren();
-    for (let i = 0; i <= 10; i++) {
-      const point = paths[0].getPointAtLength(length * i / 10);
+    for (let i = 0; i <= 16; i++) {
+      const point = paths[0].getPointAtLength(length * i / 16);
       const dot = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
       dot.setAttribute('cx', point.x);
       dot.setAttribute('cy', point.y);
-      dot.setAttribute('r', i === 0 || i === 10 ? 10 : 7);
+      dot.setAttribute('r', i === 0 || i === 16 ? 10 : 7);
       stops.appendChild(dot);
     }
   }

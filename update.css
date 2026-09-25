@@ -55,3 +55,17 @@ main{max-width:980px;padding:0 30px}.countdown-top{padding:48px 0 24px;text-alig
 .couple-sprite>.couple-bill{left:20%;top:61%;width:23px;height:auto}
 @media(max-width:560px){.track-scene .couple-runner{width:160px;height:160px}.couple-sprite>.couple-bill{width:19px}}
 @media(prefers-reduced-motion:reduce){.couple-sprite{animation:none}}
+
+.track-scene{height:max(940px,calc((var(--runner-count,4) + 1)*175px + 65px))}
+.track-scene .runner{animation-duration:48s}
+.track-scene .red-runner{width:118px;height:177px}
+#service-layer{position:fixed;inset:0;z-index:24;pointer-events:none;overflow:hidden}
+#service-waitress{position:absolute;top:0;left:0;width:105px;height:158px;will-change:transform}
+.service-facing,.service-facing img{display:block;width:100%;height:100%;object-fit:contain}
+.service-facing img{transform-origin:50% 95%;animation:service-waddle .16s ease-in-out infinite alternate}
+#service-waitress.serving .service-facing img{animation:none}
+@keyframes service-waddle{from{transform:rotate(-8deg) translateY(-3px)}to{transform:rotate(8deg) translateY(1px)}}
+#service-drink,.service-kiss{position:absolute;left:0;top:0;line-height:1;pointer-events:none}
+#service-drink{font-size:25px;opacity:0}.service-kiss{width:30px;height:30px;font-size:30px;display:grid;place-items:center;transform-origin:center}
+@media(max-width:560px){.track-scene{height:max(1040px,calc((var(--runner-count,4) + 1)*185px + 115px))}.track-scene .red-runner{width:94px;height:141px}#service-waitress{width:86px;height:129px}#service-drink{font-size:22px}}
+@media(prefers-reduced-motion:reduce){.track-scene .runner{animation:none}.service-facing img{animation:none}}
