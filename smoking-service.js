@@ -1,7 +1,9 @@
 (() => {
   const actor = document.querySelector('#money-runner');
   const sprite = actor.querySelector('.couple-sprite > img');
-  const layer = document.querySelector('#service-layer');
+  const layer = document.createElement('div');layer.className='world-cocktail-layer';layer.setAttribute('aria-hidden','true');
+  document.querySelector('#service-layer').append(layer);
+  let worldBounds=null;
   const waiter = document.querySelector('#service-waitress').cloneNode(true);
   waiter.id = 'smoking-waitress';
   const tray = document.createElement('div');
@@ -14,14 +16,17 @@
   const motion = matchMedia('(prefers-reduced-motion: reduce)');
   const animations = new Set();
   const PERIOD = 15000, DELIVERY = 1550;
+  const startedAt=performance.now();
   let ready = false, elapsed = 0, last = 0, cycle = -1, entry, previous, lastSmoke = -1, lastEdge = -1;
   const lerp = (a,b,t) => a+(b-a)*t;
   const smooth = t => t*t*(3-2*t);
   const place = (el,x,y) => el.style.transform = `translate(${x}px,${y}px)`;
   function bounds() {
-    const b=sprite.getBoundingClientRect(), ratio=sprite.naturalWidth/sprite.naturalHeight;
-    const w=Math.min(b.width,b.height*ratio), h=w/ratio;
-    return {x:b.left+(b.width-w)/2,y:b.top+(b.height-h)/2,w,h};
+    const rig=document.querySelector('.drone-rig');if(layer.parentElement!==rig)rig.append(layer);
+    const rb=rig.getBoundingClientRect(),scale=rb.width/rig.clientWidth;
+    worldBounds={left:-rb.left/scale,right:(innerWidth-rb.left)/scale,top:-rb.top/scale,bottom:(innerHeight-rb.top)/scale};
+    const b=sprite.getBoundingClientRect(),ratio=sprite.naturalWidth/sprite.naturalHeight,w=Math.min(b.width,b.height*ratio)/scale,h=w/ratio;
+    return{x:(b.left-rb.left)/scale+(b.width/scale-w)/2,y:(b.top-rb.top)/scale+(b.height/scale-h)/2,w,h,visible:b.bottom>0&&b.top<innerHeight};
   }
   function effect(className, text, frames, duration) {
     const el=document.createElement('span');el.className=className;el.textContent=text;layer.append(el);
@@ -32,15 +37,15 @@
   function clear() {
     waiter.hidden=true;tray.hidden=true;cigarette.hidden=true;
     animations.forEach(a=>a.cancel());animations.clear();
-    elapsed=0;cycle=-1;previous=null;lastSmoke=-1;
+    cycle=-1;previous=null;lastSmoke=-1;
   }
-  function start(mouth) {
+  function start(mouth, emit) {
     let edge=Math.floor(Math.random()*4);
     if(edge===lastEdge)edge=(edge+1)%4;lastEdge=edge;
     const w=waiter.offsetWidth,h=waiter.offsetHeight,r=.15+Math.random()*.7;
-    const starts=[{x:-w-40,y:innerHeight*r},{x:innerWidth+40,y:innerHeight*r},{x:innerWidth*r,y:-h-40},{x:innerWidth*r,y:innerHeight+40}];
+    const v=worldBounds,starts=[{x:v.left-w-40,y:lerp(v.top,v.bottom,r)},{x:v.right+40,y:lerp(v.top,v.bottom,r)},{x:lerp(v.left,v.right,r),y:v.top-h-40},{x:lerp(v.left,v.right,r),y:v.bottom+40}];
     entry={start:starts[edge],right:starts[edge].x<mouth.x,departure:null};
-    for(let i=0;i<2;i++) {
+    for(let i=0;emit&&i<2;i++) {
       const x=mouth.x-15,y=mouth.y-15;
       effect('service-kiss','💋',[
         {transform:`translate(${x}px,${y}px) scale(.15)`,opacity:0},
@@ -53,7 +58,7 @@
     const mouth={x:p.x+p.w*.433,y:p.y+p.h*.326};
     const n=Math.floor(elapsed/PERIOD),t=elapsed%PERIOD;
     waiter.hidden=false;
-    if(n!==cycle){cycle=n;start(mouth);lastSmoke=-1;}
+    if(n!==cycle){cycle=n;start(mouth,t<150);lastSmoke=-1;}
     const w=waiter.offsetWidth,h=waiter.offsetHeight,trayX=entry.right?.8:.2;
     const dest={x:mouth.x-trayX*w+24,y:mouth.y+30-h*.52};
     let q;
@@ -84,12 +89,12 @@
     }
   }
   function tick(now) {
-    const dt=last?Math.min(100,now-last):0;last=now;
+    elapsed=now-startedAt;last=now;
     if(ready){
       const p=bounds();
-      const visible=!document.hidden&&!motion.matches&&p.y+p.h>45&&p.y<innerHeight-40&&Number(getComputedStyle(actor).opacity)>.5;
+      const visible=actor.dataset.machineWaiting!=="true"&&!document.documentElement.classList.contains("drone-view")&&!document.hidden&&!motion.matches&&p.visible&&Number(getComputedStyle(actor).opacity)>.5;
       if(!visible){if(cycle!==-1)clear();}
-      else {if(previous&&Math.hypot(p.x-previous.x,p.y-previous.y)>90)clear();elapsed+=dt;draw(p);previous=p;}
+      else {if(previous&&Math.hypot(p.x-previous.x,p.y-previous.y)>90)clear();draw(p);previous=p;}
     }
     requestAnimationFrame(tick);
   }

@@ -100,3 +100,103 @@ main{max-width:980px;padding:0 30px}.countdown-top{padding:48px 0 24px;text-alig
 .lit .cigarette-paper b{background:#e97832;box-shadow:1px 0 3px #ff8b3e}
 .cigarette-smoke{position:absolute;left:0;top:0;width:12px;height:18px;border-left:3px solid #e6e4db;border-radius:50%;filter:blur(1.3px);pointer-events:none}
 @media(max-width:560px){#smoking-waitress{width:86px;height:129px}}
+/* This pair has its own follow, leave-road, return and standing sequence. */
+.track-scene .striped-runner{width:118px;height:177px}
+.track-scene .meeting-actor{animation:none;offset-path:none!important;offset-distance:0;offset-anchor:auto;opacity:1;transform:translate(-50%,-100%);will-change:left,top}
+.meeting-actor>img{display:block;width:100%;height:100%;object-fit:contain}
+.meeting-actor.returning>img{scale:-1 1}
+.meeting-actor.standing>img{animation:none;transform:none;scale:1 1}
+@media(max-width:560px){.track-scene .striped-runner{width:94px;height:141px}}
+
+.track-scene .striped-runner{width:154px;height:231px}@media(max-width:560px){.track-scene .striped-runner{width:122px;height:183px}}
+/* A camera rig reveals the carpet as an island without moving the page layout. */
+.drone-stage{position:relative;overflow:hidden;background:#173c49!important;isolation:isolate}
+.drone-rig{position:relative;transform-origin:0 0;--map-reveal:0}
+.drone-rig:before{content:"";position:absolute;inset:-28px;background:linear-gradient(#35192166,#35192166),url('casino-carpet-red.png') repeat;background-size:auto,560px;opacity:calc(1 - var(--map-reveal));z-index:-1;pointer-events:none}
+.carpet-island{position:absolute;pointer-events:none;z-index:-2;filter:drop-shadow(0 12px 13px #09272e80)}
+.carpet-island svg{display:block;width:100%;height:100%}
+.drone-controller{position:absolute;left:43%;top:60%;width:22%;z-index:4;transform-origin:50% 80%;pointer-events:none}
+.drone-controller svg{display:block;width:100%;overflow:visible}
+.drone-controller[hidden]{display:none}
+.drone-view .toy-slot{opacity:0;pointer-events:none}
+.drone-view .toy-lever{pointer-events:none}
+
+@media(max-width:560px){.drone-rig:before{background-size:auto,360px}}
+.drone-rig{isolation:isolate;z-index:0}
+
+/* Keep the image, hands and controller moving together while standing. */
+.standing-motion{position:relative;width:100%;height:100%;transform-origin:50% 92%}
+.meeting-actor .standing-motion>img{display:block;width:100%;height:100%;object-fit:contain;animation:bob .24s ease-in-out infinite alternate}
+.meeting-actor.returning .standing-motion>img{scale:-1 1}
+.meeting-actor.standing .standing-motion>img{animation:none;transform:none;scale:1 1}
+.meeting-actor.standing .standing-motion{animation:standing-sway 1.7s ease-in-out infinite alternate}
+#red-runner.standing .standing-motion{animation-delay:-.65s}
+@keyframes standing-sway{from{transform:translateY(0) rotate(-.8deg)}to{transform:translateY(-1.8px) rotate(.8deg)}}
+.parked-kisses{position:absolute;left:73.7%;top:31.3%;width:0;height:0;z-index:6;pointer-events:none}
+.parked-kisses span{position:absolute;font-size:22px;line-height:1;will-change:transform,opacity}
+@media(prefers-reduced-motion:reduce){.meeting-actor .standing-motion,.meeting-actor .standing-motion>img{animation:none!important}}
+
+/* More road and smaller silhouettes leave room on narrow phones. */
+@media(max-width:560px){
+ .track-scene{height:1540px}
+ .track-scene .couple-runner{width:160px;height:160px}
+ .track-scene .red-runner{width:86px;height:129px}
+ .track-scene .striped-runner{width:110px;height:165px}
+ .track-scene #runner{width:84px;height:120px}
+}
+
+@media(max-width:560px){.track-scene .couple-runner{width:142px;height:142px}}
+/* Match the original runner to the striped runner's display size. */
+.track-scene #runner{width:154px;height:231px}
+@media(max-width:560px){.track-scene #runner{width:110px;height:165px}}
+.world-cocktail-layer{position:absolute;inset:0;z-index:30;pointer-events:none;overflow:visible}
+.track-scene .casino-managed{animation:none}
+.arrival-reels{position:absolute;top:45.5%;width:27%;height:14.5%;display:flex;align-items:center;justify-content:space-around;background:#211409;border:1px solid #d9a638;border-radius:2px;opacity:0;overflow:hidden;color:#ffeabb;font:bold 5cqw Georgia,serif;pointer-events:none}
+.arrival-reels.machine-0{left:19%}.arrival-reels.machine-1{left:55%}
+.arrival-reels.rolling,.arrival-reels.finished{opacity:1}
+.arrival-reels.rolling span{animation:arrival-spin .12s linear infinite}
+@keyframes arrival-spin{from{transform:translateY(-6px);filter:blur(1px)}to{transform:translateY(6px);filter:blur(.4px)}}
+.arrival-button{position:absolute;top:73%;width:4.5%;height:2.8%;border-radius:50%;background:radial-gradient(#ff9272,#ed1621 55%,#8c0c12);border:1px solid #f3b241;pointer-events:none}
+.arrival-button.machine-0{left:41%}.arrival-button.machine-1{left:80.5%}
+.arrival-button.pressed{transform:scale(.8);box-shadow:0 0 12px 4px #ffce68}
+.arrival-hand{position:absolute;inset:0;width:100%;height:100%;z-index:9;pointer-events:none;overflow:visible}
+.at-machine>img,.at-machine .standing-motion>img,.at-machine .couple-sprite{animation-play-state:paused!important}
+.track-scene .at-machine{translate:-65% 0;transition:translate .25s ease}
+/* Compact diorama: an angled raised floor with upright characters. */
+.story-viewport{position:relative;width:100%;margin:8px auto 24px;overflow:hidden}
+.story-viewport>.journey{position:absolute;top:0;width:780px;padding:20px 24px;transform-origin:0 0;box-sizing:border-box;background:radial-gradient(ellipse at 50% 60%,#263d3c,#171917 72%)!important;border:0;overflow:hidden}
+.story-viewport .track-scene{height:570px;margin-top:18px}
+.story-viewport .journey-top{font-size:16px;letter-spacing:2px}
+.story-viewport .journey-bottom{font-size:14px}
+.story-viewport .drone-rig:before{inset:50px -10px 12px;clip-path:polygon(0 20%,100% 0,100% 79%,0 100%);background-size:auto,400px}
+.story-viewport .drone-rig:after{content:"";position:absolute;inset:50px -10px 12px;clip-path:polygon(0 20%,100% 0,100% 79%,0 100%);background:#5b2930;transform:translateY(16px);z-index:-2;opacity:calc(1 - var(--map-reveal));pointer-events:none}
+.story-viewport .carpet-island{opacity:var(--map-reveal)}
+.story-viewport .journey-road .road-edge{stroke:#090e0f95;stroke-width:40;transform:translateY(7px)}
+.story-viewport .journey-road .road-surface{stroke-width:30;stroke:#e5d2af}
+.story-viewport .track-scene #runner,.story-viewport .track-scene .striped-runner{width:135px;height:202px}
+.story-viewport .track-scene .red-runner{width:110px;height:165px}
+.story-viewport .track-scene .couple-runner{width:188px;height:188px}
+.story-viewport .track-scene .destination-pair{width:230px;height:230px;right:12px;top:0}
+.story-viewport .runner{filter:drop-shadow(4px 8px 3px #0005)}
+.story-viewport #service-waitress,.story-viewport #smoking-waitress{width:105px;height:158px}
+@media(max-width:560px){.countdown-top{padding-top:20px;padding-bottom:12px}.countdown strong{font-size:46px}.date-note{margin-top:14px}.story-viewport{margin-top:0}.toy-slot{width:115px}.toy-reel{font-size:20px}}
+/* The photo trigger remains readable and tappable outside the scaled stage. */
+.group-photo-toolbar{display:flex;justify-content:flex-end;margin:0 0 8px}
+.group-photo-button{background:var(--lime);color:#171917;border:0;border-radius:22px;min-height:44px;padding:10px 22px;font-weight:700;cursor:pointer}
+.group-photo-button:disabled{opacity:.6;cursor:wait}
+.photo-standing>img,.photo-standing .couple-sprite{animation:none!important}
+.photo-standing{z-index:5!important}
+#runner.photo-standing>img{clip-path:inset(0 0 26% 0)}
+#money-runner.photo-standing .couple-sprite{clip-path:inset(0 0 28% 0)}
+#runner.photo-standing:after,#money-runner.photo-standing:after{content:"";position:absolute;inset:0;pointer-events:none;background:no-repeat center/100% 100%;z-index:-1}
+#runner.photo-standing:after{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 135 202'%3E%3Cpath d='M67 147L62 191L55 191M75 147L81 191L89 191' fill='none' stroke='%23171819' stroke-width='8' stroke-linecap='round'/%3E%3C/svg%3E")}
+#money-runner.photo-standing:after{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 188 188'%3E%3Cpath d='M51 133L47 177L39 177M60 133L66 177L74 177M129 136L125 177L117 177M139 136L145 177L153 177' fill='none' stroke='%23171819' stroke-width='8' stroke-linecap='round'/%3E%3C/svg%3E")}
+/* Photo-only waves: the controller owner's hands stay on the controller. */
+.photo-wave{display:none;position:absolute;inset:0;pointer-events:none;z-index:4}
+.photo-standing .photo-wave{display:block}
+.photo-wave svg{width:100%;height:100%;overflow:visible}
+.photo-wave-arm{animation:photo-wave .48s ease-in-out infinite alternate}
+@keyframes photo-wave{from{transform:rotate(-19deg)}to{transform:rotate(19deg)}}
+#runner.photo-standing>img{clip-path:polygon(0 0,100% 0,100% 54%,74% 54%,74% 69%,100% 69%,100% 74%,0 74%)}
+#money-runner.photo-standing .couple-sprite{clip-path:polygon(0 0,100% 0,100% 53%,84% 53%,84% 64%,100% 64%,100% 72%,0 72%,0 64%,17% 64%,17% 47%,0 47%)}
+@media(prefers-reduced-motion:reduce){.photo-wave-arm{animation:none}}

@@ -96,7 +96,7 @@ joinButton.addEventListener('click', () => burstMoney());
   const stops = road.querySelector('.road-stops');
   scene.style.setProperty('--runner-count', runners.reduce((total, runner) => total + Number(runner.dataset.characters || 1), 0));
   runners.forEach((runner, index) => {
-    const progress = (index / runners.length + .08) % 1;
+    const progress = runner.id==='runner' ? .84 : runner.id==='money-runner' ? .64 : (index / runners.length + .08) % 1;
     runner.style.setProperty('--route-delay', `${-progress * 48}s`);
     runner.style.setProperty('--rest-position', `${progress * 100}%`);
   });
@@ -112,12 +112,10 @@ joinButton.addEventListener('click', () => burstMoney());
     const dy = startY - endY;
     const x = n => startX + dx * n;
     const y = n => startY - dy * n;
-    const route = `M ${startX} ${startY}
-      C ${x(.22)} ${y(0)}, ${x(.24)} ${y(.04)}, ${x(.24)} ${y(.20)}
-      C ${x(.24)} ${y(.37)}, ${x(.49)} ${y(.26)}, ${x(.50)} ${y(.40)}
-      C ${x(.52)} ${y(.54)}, ${x(.51)} ${y(.60)}, ${x(.65)} ${y(.62)}
-      C ${x(.83)} ${y(.64)}, ${x(.82)} ${y(.72)}, ${x(.82)} ${y(.83)}
-      C ${x(.82)} ${y(.98)}, ${x(.90)} ${y(1)}, ${endX} ${endY}`;
+    const route = `M ${startX} ${height-40}
+      C ${width*.26} ${height-25}, ${width*.30} ${height*.67}, ${width*.43} ${height*.70}
+      C ${width*.62} ${height*.75}, ${width*.54} ${height*.48}, ${width*.71} ${height*.48}
+      C ${width*.87} ${height*.49}, ${width*.85} ${endY+15}, ${endX} ${endY}`;
     road.setAttribute('viewBox', `0 0 ${width} ${height}`);
     paths.forEach(path => path.setAttribute('d', route));
     runners.forEach(runner => runner.style.offsetPath = `path("${route.replace(/\s+/g, ' ')}")`);
