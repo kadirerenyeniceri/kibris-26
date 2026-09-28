@@ -10,7 +10,7 @@
  const toolbar=document.createElement('div');toolbar.className='group-photo-toolbar';toolbar.append(button);document.querySelector('.story-viewport').before(toolbar);
  const status=document.createElement('span');status.className='sr-only';status.setAttribute('role','status');toolbar.append(status);
  const pair=[{el:man,p:0,delay:6.72,waiting:false},{el:woman,p:0,delay:0,waiting:false}];
- let ready=false,last=0,pending=false,shot=null;
+ let ready=true,last=0,pending=false,shot=null;
  const smooth=t=>{t=Math.max(0,Math.min(1,t));return t*t*(3-2*t);};
  const along=p=>road.getPointAtLength(road.getTotalLength()*Math.max(0,Math.min(1,p)));
  const mix=(a,b,t)=>({x:a.x+(b.x-a.x)*t,y:a.y+(b.y-a.y)*t});
@@ -22,20 +22,23 @@
   const others=window.photoWalkers.walkers;
   addWave(others[0].el,'0 0 135 202','<path d="M92 121L108 115" fill="none" stroke="#202124" stroke-width="7" stroke-linecap="round"/>'+waveArm(108,115,108,94,0));
   addWave(others[1].el,'0 0 188 188','<path d="M31 90L15 99M158 105L175 101" fill="none" stroke="#202124" stroke-width="7" stroke-linecap="round"/>'+waveArm(15,99,8,78,-.25)+waveArm(175,101,179,80,-.5));
-  // Keep each runner's own road progress, including the hand-holding pair.
-  const entries=[others[0],pair[0],pair[1],others[1]].map(w=>({w,start:along(w.p)}));
+  const friends=window.trioPhoto.walkers;
+  friends.forEach((w,i)=>addWave(w.el,'0 0 135 202','<path d="M92 121L108 115" fill="none" stroke="#202124" stroke-width="7" stroke-linecap="round"/>'+waveArm(108,115,108,94,-i*.2)));
+  // All eight friends share the frame; preserve each actor's road progress and size.
+  const entries=[others[0],pair[0],pair[1],others[1],...friends].map(w=>({w,start:along(w.p),width:w.el.style.width,height:w.el.style.height}));
+  entries.forEach(({w})=>{w.el.style.width=w.el.offsetWidth*.78+'px';w.el.style.height=w.el.offsetHeight*.78+'px';});
   entries.forEach(({w})=>w.el.classList.add('meeting-actor','photo-participant'));
   shot={time:0,entries};status.textContent='Herkes drone çekimi için toplanıyor.';
  }
  button.addEventListener('click',()=>{if(pending||shot||!ready)return;pending=true;button.disabled=true;button.setAttribute('aria-busy','true');status.textContent='Drone çekimi hazırlanıyor.';});
  function finish(){
-  for(const {w} of shot.entries){w.el.classList.remove('photo-participant','photo-standing','returning');if(!pair.includes(w)){w.el.classList.remove('meeting-actor');w.el.style.left='';w.el.style.top='';}}
+  for(const {w,width,height} of shot.entries){w.el.style.width=width;w.el.style.height=height;w.el.classList.remove('photo-participant','photo-standing','returning');if(!pair.includes(w)){w.el.classList.remove('meeting-actor');w.el.style.left='';w.el.style.top='';}}
   shot=null;window.groupPhotoActive=false;button.disabled=false;button.removeAttribute('aria-busy');status.textContent='Çekim tamamlandı, herkes yola devam ediyor.';
   pose(man,false,images.manRun);pose(woman,false,images.womanRun);
  }
  function drawShot(){
   const t=shot.time,width=scene.clientWidth,y=along(.5).y+85;
-  const xs=[.12,.32,.49,.75];
+  const xs=[.07,.20,.32,.47,.63,.77,.90];
   // The controller owner steps aside first; the rest follow into a single row.
   shot.entries.forEach(({w,start},i)=>{
    const destination={x:width*xs[i],y};const delay=i===1?0:i===2?.65:.4;
@@ -46,14 +49,14 @@
    if(w.el===woman)pose(woman,arrived&&!returning,arrived&&!returning?images.womanWave:images.womanRun);
   });
   scene.dataset.meetingStage=t<4?'gathering':t<13.6?'standing':'rejoining';
-  window.droneScene.update(motion.matches?-1:t-5,{x:scene.offsetLeft+width*.45,y:scene.offsetTop+y-100},t-2.4);
+  window.droneScene.update(motion.matches?-1:t-5,{x:scene.offsetLeft+width*.5,y:scene.offsetTop+y-100},t-2.4);
   if(t>=15.6){finish();window.droneScene.update(-1,{x:0,y:0});}
  }
  function tick(now){
   const dt=last?Math.min(.1,(now-last)/1000):0;last=now;
   if(ready){
    const area=scene.getBoundingClientRect(),visible=area.bottom>0&&area.top<innerHeight;
-   if(pending&&!window.photoWalkers.isBusy()&&!pair.some(w=>w.waiting))begin();
+   if(pending&&!window.photoWalkers.isBusy()&&!window.trioPhoto.isBusy()&&!pair.some(w=>w.waiting))begin();
    if(shot){if(!document.hidden&&visible)shot.time+=dt;drawShot();}
    else{
     scene.dataset.meetingStage='following';

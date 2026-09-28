@@ -11,7 +11,8 @@
  const hand=document.createElementNS('http://www.w3.org/2000/svg','svg');hand.classList.add('arrival-hand');hand.setAttribute('aria-hidden','true');
  hand.innerHTML='<path fill="none" stroke="#202124" stroke-width="6" stroke-linecap="round"/><circle r="5" fill="#edbc91" stroke="#ba805c" stroke-width="1"/>';
  scene.append(hand);hand.style.display='none';
- const queue=[];let active=null,last=0,serial=0;
+ const queue=[];let active=null,last=0,serial=0,reserved=false;
+ window.sharedMachines={screens,buttons,reserve(){reserved=true;return !active;},release(){reserved=false;}};
  const symbols=['🍒','7','🍋','🔔','🍊'];
  window.machineVisit=actor=>new Promise(resolve=>{
   actor.dataset.machineWaiting='true';queue.push({actor,resolve,round:0,count:Number(actor.dataset.characters||1)});
@@ -23,7 +24,7 @@
  function tick(now){
   const dt=last?Math.min(80,now-last):0;last=now;
   if(!document.hidden&&!motion.matches){
-   if(!active&&queue.length){active=queue.shift();active.time=0;active.slot=serial++%2;active.actor.classList.add('at-machine');}
+   if(!reserved&&!active&&queue.length){active=queue.shift();active.time=0;active.slot=serial++%2;active.actor.classList.add('at-machine');}
    if(active){
     active.time+=dt;const t=active.time,i=active.slot,screen=screens[i];
     const r=scene.getBoundingClientRect(),scale=r.width/scene.clientWidth,a=active.actor.getBoundingClientRect(),b=buttons[i].getBoundingClientRect();
@@ -50,7 +51,7 @@
  // The other runners stop for their turn, then restart at the first point.
  const walkers=[['runner',.84],['money-runner',.64]].map(([id,p])=>({el:document.getElementById(id),p,waiting:false}));
  walkers.forEach(w=>w.el.classList.add('casino-managed'));
- window.photoWalkers={walkers,isBusy:()=>!!active||queue.length>0};
+ window.photoWalkers={walkers,isBusy:()=>!!active||queue.length>0||reserved};
  let previous=0;
  function walk(now){
   const dt=previous?Math.min(.1,(now-previous)/1000):0;previous=now;
